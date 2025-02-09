@@ -1,20 +1,46 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useCallback, useEffect } from 'react';
+import { AppRegistry, SafeAreaView } from 'react-native';
+import { setStatusBarBackgroundColor, setStatusBarHidden, setStatusBarStyle, setStatusBarTranslucent } from 'expo-status-bar';
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
 
-export default function App() {
+// Hooks
+import Colors from './hooks/Colors';
+import Styles from './hooks/Styles';
+
+// Screens
+import Home from './screens/Home';
+
+SplashScreen.preventAutoHideAsync();
+
+function App() {
+  const [fontsLoaded, fontError] = useFonts({ 'OpenSans-Regular': require('./assets/fonts/OpenSans-Regular.ttf') });
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded || fontError) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
+
+  useEffect(() => {
+    setStatusBarBackgroundColor(Colors.gray.d, true);
+    setStatusBarHidden(false, 'none');
+    setStatusBarStyle('dark');
+    setStatusBarTranslucent(true);
+  }, []);
+
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={Styles.AreaView} onLayout={onLayoutRootView}>
+      <Home />
+    </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+AppRegistry.registerComponent('App', () => App);
+
+export default App;

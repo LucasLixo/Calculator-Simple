@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "calculator-simple",
+    "name": "Calculator Simple",
     "slug": "calculator-simple",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -15,14 +15,43 @@
     "ios": {
       "supportsTablet": true
     },
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "androidStatusBar": {
+      "hidden": false
+    },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.calculator.simple"
     },
+    "plugins": [
+      [
+        "./plugins/withAndroidMainActivityAttributes",
+        {
+          "android:windowSoftInputMode": "adjustPan",
+          "android:showWhenLocked": true,
+          "android:turnScreenOn": true
+        }
+      ],
+      [
+        "expo-font",
+        {
+          "fonts": ["./assets/fonts/OpenSans-Regular.ttf"]
+        }
+      ]
+    ],
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "29ab76e2-fe05-4ff4-9c22-c8ef8db8f867"
+      }
     }
   }
 }
