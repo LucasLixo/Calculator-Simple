@@ -9,17 +9,7 @@ cd /d %DRIVE%
 set PROJECT_DIR=%~dp0..\
 cd /d %PROJECT_DIR%
 
-:: Runs `npx expo prebuild` and continues only if successful
-npx expo prebuild && (
-
-    :: Runs the React Native build
-    set NODE_ENV=production
-    npx react-native build-android --mode=release && (
-        cd android
-        gradlew.bat assembleDebug
-        cd .. 
-    )
-)
-
+: npx eas build --platform android --profile preview
+npx eas build --platform android --profile production
 
 exit /b

@@ -22,13 +22,13 @@ const Home: React.FC = ({ }) => {
     const [oper, setOper] = useState((): Operator | undefined => undefined);
     const [result, setResult] = useState((): number | undefined => undefined);
 
-    const logger = (): void => {
-        // console.log(`Number X: ${numberX}, Operator: ${oper}, Number Y: ${numberY}, Result: ${result}`);
-    }
+    // const logger = (): void => {
+    //     console.log(`Number X: ${numberX}, Operator: ${oper}, Number Y: ${numberY}, Result: ${result}`);
+    // }
 
     useEffect(() => {
         setEquation(getResultString());
-        logger();
+        // logger();
     }, [numberX, numberY, oper, result]);
 
     const getOperator = (): string => {
@@ -121,7 +121,12 @@ const Home: React.FC = ({ }) => {
     };
 
     const setOperator = (operator: Operator): void => {
-        if (numberX !== '') {
+        if (result !== undefined) {
+            setNumberX(result.toString());
+            setNumberY(undefined);
+            setResult(undefined);
+        }
+        if (numberX !== undefined) {
             setOper(operator);
         }
     }
