@@ -1,4 +1,4 @@
-import React, {  useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 
 // Components
@@ -7,61 +7,143 @@ import MyButton from '../components/MyButton';
 
 // Hooks
 import Styles from '../hooks/Styles';
-import { Calculator, Operator } from '../hooks/Calculator';
+import { Operator } from '../hooks/Operator';
 import { APP_TITLE } from '../hooks/Constants';
 
 // Style
 import HomeStyles from './HomeStyle';
 
 const Home: React.FC = ({ }) => {
-    const calc = new Calculator();
+    const [equation, setEquation] = useState((): string => '0');
 
-    const [equation, setEquation] = useState(() : string => calc.getResultString());
+    const [numberX, setNumberX] = useState((): string | undefined => undefined);
+    const [numberY, setNumberY] = useState((): string | undefined => undefined);
 
-    const updateEquation = () => {
-        console.log(calc.getResultString());
-        setEquation(calc.getResultString());
+    const [oper, setOper] = useState((): Operator | undefined => undefined);
+    const [result, setResult] = useState((): number | undefined => undefined);
+
+    const logger = (): void => {
+        // console.log(`Number X: ${numberX}, Operator: ${oper}, Number Y: ${numberY}, Result: ${result}`);
+    }
+
+    useEffect(() => {
+        setEquation(getResultString());
+        logger();
+    }, [numberX, numberY, oper, result]);
+
+    const getOperator = (): string => {
+        switch (oper) {
+            case Operator.addition:
+                return '+';
+            case Operator.subtraction:
+                return '-';
+            case Operator.multiplication:
+                return '*';
+            case Operator.division:
+                return '/';
+            default:
+                return '';
+        }
+    }
+
+    const getResultString = (): string => {
+        if (
+            numberX != undefined &&
+            oper != undefined &&
+            numberY != undefined &&
+            result != undefined) {
+            return `${numberX} ${getOperator()} ${numberY} = ${result}`;
+        }
+        if (
+            numberX != undefined &&
+            oper != undefined &&
+            numberY != undefined) {
+            return `${numberX} ${getOperator()} ${numberY}`;
+        }
+        if (
+            numberX != undefined &&
+            oper != undefined) {
+            return `${numberX} ${getOperator()}`;
+        }
+        if (numberX != undefined) {
+            return numberX;
+        }
+        return '0';
+    }
+
+    const setClear = (): void => {
+        setEquation('0');
+        setNumberX(undefined);
+        setNumberY(undefined);
+        setOper(undefined);
+        setResult(undefined);
+    }
+
+    const setCalculate = (): void => {
+        if (numberX != undefined && numberY != undefined) {
+            switch (oper) {
+                case Operator.addition:
+                    setResult(parseFloat(numberX) + parseFloat(numberY));
+                    break;
+                case Operator.subtraction:
+                    setResult(parseFloat(numberX) - parseFloat(numberY));
+                    break;
+                case Operator.multiplication:
+                    setResult(parseFloat(numberX) * parseFloat(numberY));
+                    break;
+                case Operator.division:
+                    if (numberY !== '0') {
+                        setResult(parseFloat(numberX) / parseFloat(numberY));
+                    } else {
+                        setResult(0);
+                    }
+                    break;
+            }
+        } else {
+            if (numberX != undefined) {
+            } else {
+                setClear();
+            }
+        }
+    }
+
+    const setNumber = (num: number): void => {
+        if (result != undefined) {
+            setClear();
+            setNumberX(num.toString());
+            return;
+        }
+        if (oper === undefined) {
+            setNumberX(prev => (prev !== undefined ? `${prev}${num}` : num.toString()));
+        } else {
+            setNumberY(prev => (prev !== undefined ? `${prev}${num}` : num.toString()));
+        }
     };
 
-    const setClear = () => {
-        calc.clear();
-        updateEquation();
-    }
-
-    const setCalculate = () => {
-        calc.calculate();
-        updateEquation();
-    }
-
-    const setNumber = (number: number) => {
-        calc.setNumber(number);
-        updateEquation();
-    }
-
-    const setOperator = (operator: Operator) => {
-        calc.setOperator(operator);
-        updateEquation();
+    const setOperator = (operator: Operator): void => {
+        if (numberX !== '') {
+            setOper(operator);
+        }
     }
 
     return (
         <View style={Styles.ContainerView}>
             <View style={HomeStyles.Header}>
                 <MyText
-                    style={{ fontSize: 22 }}
+                    style={{ fontSize: 26 }}
                     type='subtitle'
                 >
                     {APP_TITLE}
                 </MyText>
             </View>
             <View style={HomeStyles.Container}>
-                <View style={HomeStyles.ContainerResults}>
+                <View style={HomeStyles.Hr}>
                     <MyText
                         style={{ fontSize: 34 }}
                         type='subtitle'>
                         {equation}
                     </MyText>
                 </View>
-                <View style={Styles.Hr} />
                 <View style={HomeStyles.ContainerButtons}>
                     <MyButton onPress={() => setNumber(7)}>
                         {`7`}

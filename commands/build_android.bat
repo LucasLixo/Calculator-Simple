@@ -14,11 +14,12 @@ npx expo prebuild && (
 
     :: Runs the React Native build
     set NODE_ENV=production
-    npx react-native build-android --mode=release
+    npx react-native build-android --mode=release && (
+        cd android
+        gradlew.bat assembleDebug
+        cd .. 
+    )
 )
 
-npx expo run:android --variant release
 
-cd /d %DRIVE%
-cd /d %PROJECT_DIR%
 exit /b
