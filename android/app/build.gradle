@@ -92,7 +92,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0.0"
+        versionName "1.0.1"
     }
     signingConfigs {
         // debug {
@@ -102,11 +102,11 @@ android {
         //     keyPassword 'android'
         // }
         release {
-            if (project.hasProperty('upload-keystore.keystore')) {
-                storeFile file(upload-keystore.keystore)
-                storePassword af781255ab032d83ac26c762b87a8745
-                keyAlias upload
-                keyPassword af781255ab032d83ac26c762b87a8745
+            if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
+                storeFile file(MYAPP_UPLOAD_STORE_FILE)
+                storePassword MYAPP_UPLOAD_STORE_PASSWORD
+                keyAlias MYAPP_UPLOAD_KEY_ALIAS
+                keyPassword MYAPP_UPLOAD_KEY_PASSWORD
             }
         }
     }
