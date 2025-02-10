@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-// Recursos
+// Resources
 import Colors from '../hooks/Colors';
 
 const HomeStyles = StyleSheet.create({
